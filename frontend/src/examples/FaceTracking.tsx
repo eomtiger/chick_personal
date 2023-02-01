@@ -39,7 +39,7 @@ const ExampleFaceTracking = () => {
         ref={sceneRef}
       >
         <Assets>
-          <Item id="glasses" src="./src/heart-shaped_glasses/scene.gltf" />
+          <Item id="glasses" src="./src/assets/3dmodel/heart_glasses/scene.gltf" />
         </Assets>
         <Camera position={{ x: 0, y: 0, z: 0 }} look-controls={false} active={false} />
         <Entity visible={enabled}>
