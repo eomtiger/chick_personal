@@ -2,7 +2,7 @@ import React from 'react';
 import { Entity as AEntity } from 'aframe';
 import { Entity as EntityComponent } from 'aframe-react-component';
 import { getAframeProps } from 'aframe-react-component/dist/utils/common';
-import { Entity as _Entity } from '../mindAR/utils/interfaces';
+import { Entity as _Entity } from '../utils/interfaces';
 
 const Entity = React.forwardRef<AEntity, _Entity>((props, ref) => {
   const {

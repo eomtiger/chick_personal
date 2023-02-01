@@ -4,10 +4,10 @@ import { Scene as SceneComponent } from 'aframe-react-component';
 import { getAframeProps } from 'aframe-react-component/dist/utils/common';
 import { IMindARFaceSystem } from 'mind-ar-ts/types/face-target/aframe';
 import { IMindARImageSystem } from 'mind-ar-ts/types/image-target/aframe';
-import { generateFaceProps, generateImageProps } from '../mindAR/utils/defaultprops';
-import { cleanupVideo, mergeRefs } from '../mindAR/utils/common';
-import { Scene as _Scene } from '../mindAR/utils/interfaces';
-import { AR_COMPONENT_NAME } from '../mindAR/utils/constant';
+import { generateFaceProps, generateImageProps } from '../utils/defaultprops';
+import { cleanupVideo, mergeRefs } from '../utils/common';
+import { Scene as _Scene } from '../utils/interfaces';
+import { AR_COMPONENT_NAME } from '../utils/constant';
 
 const Scene = React.forwardRef<AScene | undefined, _Scene>(({ children, ...props }, ref) => {
   const sceneRef = useRef<AScene>(null);
