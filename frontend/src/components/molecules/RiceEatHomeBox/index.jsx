@@ -1,3 +1,17 @@
+{
+  /* 
+      최초 작성자: 최정온
+      수정 작성자: 최정온
+      최초 작성일: 23.01.30
+      수정 작성일: 23.02.02
+      
+      Ver 1.0.0
+      
+      - 사용 예시:
+        <RiceEatHomeBox />
+      */
+}
+
 import Rice from '../../../assets/images/sidebar/rice.svg';
 import HomeBox from '../../atoms/HomeBox';
 import GamePlayBtn from './../../atoms/GamePlayBtn/index';
