@@ -6,11 +6,12 @@ import HomePage from './components/pages/HomePage/index';
 function App() {
   return (
     <div className="App">
-      <Video />
+      {/* <Video /> */}
       {/* <div className="container">
         <h1>Hello Mind AR J/TS!</h1>
         <FaceTracking />
       </div> */}
+      {/* <HomePage /> */}
     </div>
   );
 }
