@@ -1,9 +1,9 @@
 import React from 'react';
 import { Scene as AScene } from 'aframe';
 import { Camera, Sphere, Entity, GLTFModel, Assets, Item } from 'aframe-react-component';
-import FaceTracking from '../mindAR/provider/FaceTracking';
-import { Faces, Scene } from '../mindAR/components';
-import useARManager from '../mindAR/utils/useARManager';
+import FaceTracking from '../provider/FaceTracking';
+import { Faces, Scene } from '../components';
+import useARManager from '../utils/useARManager';
 
 const ExampleFaceTracking = () => {
   const [enabled, setEnabled] = React.useState(false);
