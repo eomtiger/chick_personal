@@ -6,11 +6,11 @@ import ExampleFaceTracking from './mindAR/examples/FaceTracking';
 function App() {
   return (
     <div className="App">
-      {/* <Video /> */}
-      <div className="container">
+      <Video />
+      {/* <div className="container">
         <h1>Hello Mind AR J/TS!</h1>
         <ExampleFaceTracking />
-      </div>
+      </div> */}
       {/* <HomePage /> */}
     </div>
   );

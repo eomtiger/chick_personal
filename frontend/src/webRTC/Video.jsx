@@ -1,17 +1,25 @@
-import { OpenVidu, Subscriber } from "openvidu-browser";
-import axios from "axios";
-import React, { Component } from "react";
-import UserVideoComponent from "./UserVideoComponent";
-import ArBottomBarBase from "../components/atoms/ArBottomBarBase";
-import WebCamBoard from "../components/atoms/WebCamBoard";
-import FriendIsComing from "../components/atoms/FriendIsComing";
+import { OpenVidu, Subscriber } from 'openvidu-browser';
+import axios from 'axios';
+import React, { Component } from 'react';
+import { Scene as AScene } from 'aframe';
+import { Camera, Sphere, Entity, GLTFModel, Assets, Item } from 'aframe-react-component';
+import FaceTracking from '../mindAR/provider/FaceTracking';
+import { Faces, Scene } from '../mindAR/components';
+import useARManager from '../mindAR/utils/useARManager';
+import AFRAME from 'aframe';
+// import { spawn } from 'child_process';
 
-import MicBtn from "../components/atoms/MicBtn";
+import UserVideoComponent from './UserVideoComponent';
+import ArBottomBarBase from '../components/atoms/ArBottomBarBase';
+import WebCamBoard from '../components/atoms/WebCamBoard';
+import FriendIsComing from '../components/atoms/FriendIsComing';
 
-import { prototype } from "events";
-import VideoBtn from "../components/atoms/VideoBtn";
+import MicBtn from '../components/atoms/MicBtn';
 
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
+import { prototype } from 'events';
+import VideoBtn from '../components/atoms/VideoBtn';
+
+const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 // const APPLICATION_SERVER_URL = "http://3.35.166.44:9000/";
 
 class Video extends Component {
@@ -20,12 +28,15 @@ class Video extends Component {
 
     // These properties are in the state's component in order to re-render the HTML whenever their values change
     this.state = {
-      mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      mySessionId: 'SessionA',
+      myUserName: 'Participant' + Math.floor(Math.random() * 100),
       session: undefined,
       publisher: undefined,
       subscribers: [],
+      enabled: false,
+      stream: undefined,
     };
+    this.sceneRef = React.createRef(AScene);
 
     this.joinSession = this.joinSession.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
@@ -41,11 +52,12 @@ class Video extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.onbeforeunload);
+    window.addEventListener('beforeunload', this.onbeforeunload);
+    //
   }
 
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.onbeforeunload);
+    window.removeEventListener('beforeunload', this.onbeforeunload);
   }
 
   onbeforeunload(event) {
@@ -93,7 +105,7 @@ class Video extends Component {
         // --- 3) Specify the actions when events take place in the session ---
 
         // On every new Stream received...
-        mySession.on("streamCreated", (event) => {
+        mySession.on('streamCreated', (event) => {
           // Subscribe to the Stream to receive it. Second parameter is undefined
           // so OpenVidu doesn't create an HTML video by its own
           var subscriber = mySession.subscribe(event.stream, undefined);
@@ -107,13 +119,13 @@ class Video extends Component {
         });
 
         // On every Stream destroyed...
-        mySession.on("streamDestroyed", (event) => {
+        mySession.on('streamDestroyed', (event) => {
           // Remove the stream from 'subscribers' array
           this.deleteSubscriber(event.stream.streamManager);
         });
 
         // On every asynchronous exception...
-        mySession.on("exception", (exception) => {
+        mySession.on('exception', (exception) => {
           console.warn(exception);
         });
 
@@ -127,17 +139,44 @@ class Video extends Component {
             .connect(token, { clientData: this.state.myUserName })
             .then(async () => {
               // --- 5) Get your own camera stream ---
+              // this.scene = this.sceneRef.current;
+              // this.arScreen = AFRAME.AR.getRenderTarget();
+              // this.encodingProcess = spawn('ffmpeg', [
+              //   '-f',
+              //   'rawvideo',
+              //   '-pix_fmt',
+              //   'rgba',
+              //   '-s',
+              //   `500x500`,
+              //   '-i',
+              //   '-',
+              //   '-f',
+              //   'flv',
+              //   '-an',
+              //   '-vcodec',
+              //   'vp9',
+              //   'rtmp://localhost/live/ar-stream',
+              // ]);
+
+              // this.arScreen.requestFrame().then((data) => {
+              //   this.encodingProcess.stdin.write(Buffer.from(data.data.buffer));
+              // });
+
+              if (this.sceneRef.current) {
+                this.stream = this.sceneRef.current.canvas.captureStream();
+              }
+              console.log('stream', this.stream);
 
               // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
               // element: we will manage it on our own) and with the desired properties
               let publisher = await this.OV.initPublisherAsync(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
+                videoSource: this.stream, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: "555x307", // The resolution of your video
+                resolution: '555x307', // The resolution of your video
                 frameRate: 30, // The frame rate of your video
-                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                 mirror: false, // Whether to mirror your local video or not
               });
 
@@ -147,9 +186,7 @@ class Video extends Component {
 
               // Obtain the current video device in use
               var devices = await this.OV.getDevices();
-              var videoDevices = devices.filter(
-                (device) => device.kind === "videoinput"
-              );
+              var videoDevices = devices.filter((device) => device.kind === 'videoinput');
               var currentVideoDeviceId = publisher.stream
                 .getMediaStream()
                 .getVideoTracks()[0]
@@ -166,7 +203,7 @@ class Video extends Component {
             })
             .catch((error) => {
               console.log(
-                "There was an error connecting to the session:",
+                'There was an error connecting to the session:',
                 error.code,
                 error.message
               );
@@ -190,8 +227,8 @@ class Video extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      mySessionId: 'SessionA',
+      myUserName: 'Participant' + Math.floor(Math.random() * 100),
       mainStreamManager: undefined,
       publisher: undefined,
     });
@@ -201,7 +238,17 @@ class Video extends Component {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
 
-    console.log("1231312321312", this.state.subscribers);
+    const startAr = () => {
+      if (this.state.enabled) {
+        useARManager(this.sceneRef).stopAR();
+      } else {
+        useARManager(this.sceneRef).startAR();
+      }
+
+      this.handleEnable();
+    };
+
+    console.log('1231312321312', this.state.subscribers);
     return (
       <div className="flex justify-center">
         {this.state.session === undefined ? (
@@ -224,6 +271,36 @@ class Video extends Component {
 
         {this.state.session !== undefined ? (
           <div>
+            <FaceTracking>
+              <Scene
+                mindARFace={{
+                  autoStart: true,
+                }}
+                colorSpace="sRGB"
+                embedded
+                renderer="colorManagement: true, physicallyCorrectLights"
+                orientationUI={false}
+                vrModeUI={false}
+                stats={this.enabled}
+                ref={this.sceneRef}
+              >
+                <Assets>
+                  <Item id="glasses" src="./src/assets/3dmodel/heart_glasses/scene.gltf" />
+                </Assets>
+                <Camera position={{ x: 0, y: 0, z: 0 }} look-controls={false} active={false} />
+                <Entity visible={this.enabled}>
+                  <Faces anchorIndex={168}>
+                    <GLTFModel
+                      rotation={[0, 0, 0]}
+                      position={[-0.35, 0.4, 0.1]}
+                      scale={[0.28, 0.28, 0.28]}
+                      src="#glasses"
+                    />
+                    {/* <Sphere radius={0.1} color={'green'} position={[0, 0, 0]} /> */}
+                  </Faces>
+                </Entity>
+              </Scene>
+            </FaceTracking>
             <WebCamBoard>
               {this.state.publisher !== undefined ? (
                 <div className="m-3 rounded-[30px] w-[555px] h-[307px] flex items-center justify-center">
@@ -232,7 +309,7 @@ class Video extends Component {
                     <div class="absolute bottom-0 right-0">
                       <MicBtn onClick={this.micStatusChanged} />
                     </div>
-                    <div>
+                    <div class="absolute bottom-0 left-0">
                       <VideoBtn onClick={this.camStatusChanged} />
                     </div>
                   </div>
@@ -263,6 +340,9 @@ class Video extends Component {
                     value="나가기"
                   />
                 </div>
+                <button onClick={startAr} style={{ position: 'absolute', zIndex: 999 }}>
+                  {startAr ? 'Stop' : 'Start'}
+                </button>
               </ArBottomBarBase>
             </div>
           </div>
@@ -270,6 +350,12 @@ class Video extends Component {
       </div>
     );
   }
+
+  handleEnable = () => {
+    this.setState((state) => ({
+      enabled: !state.enabled,
+    }));
+  };
 
   /**
    * --------------------------------------------
@@ -293,7 +379,7 @@ class Video extends Component {
 
   async createSession(sessionId) {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
+      APPLICATION_SERVER_URL + 'api/sessions',
       {
         customSessionId: sessionId,
         // email: "ssafy@ssafy.com",
@@ -302,7 +388,7 @@ class Video extends Component {
 
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
@@ -311,7 +397,7 @@ class Video extends Component {
 
   async createToken(sessionId) {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+      APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
       {
         // customIceServers: [
         //   {
@@ -322,7 +408,7 @@ class Video extends Component {
         // ],
       },
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
     return response.data; // The token
