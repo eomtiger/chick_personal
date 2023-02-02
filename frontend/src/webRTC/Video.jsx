@@ -6,7 +6,13 @@ import ArBottomBarBase from "../components/atoms/ArBottomBarBase";
 import WebCamBoard from "../components/atoms/WebCamBoard";
 import FriendIsComing from "../components/atoms/FriendIsComing";
 
+import MicBtn from "../components/atoms/MicBtn";
+
+import { prototype } from "events";
+import VideoBtn from "../components/atoms/VideoBtn";
+
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
+// const APPLICATION_SERVER_URL = "http://3.35.166.44:9000/";
 
 class Video extends Component {
   constructor(props) {
@@ -26,6 +32,12 @@ class Video extends Component {
     this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
+    this.micStatusChanged = this.micStatusChanged.bind(this);
+    // this.camStatusChanged = this.camStatusChanged.bind(this);
+  }
+
+  micStatusChanged() {
+    this.micStatusChanged();
   }
 
   componentDidMount() {
@@ -73,6 +85,7 @@ class Video extends Component {
     this.setState(
       {
         session: this.OV.initSession(),
+        // session: "http://3.35.166.44:4443/",
       },
       () => {
         var mySession = this.state.session;
@@ -122,7 +135,7 @@ class Video extends Component {
                 videoSource: undefined, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: "5550x350", // The resolution of your video
+                resolution: "555x307", // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
                 mirror: false, // Whether to mirror your local video or not
@@ -189,7 +202,6 @@ class Video extends Component {
     const myUserName = this.state.myUserName;
 
     console.log("1231312321312", this.state.subscribers);
-
     return (
       <div className="flex justify-center">
         {this.state.session === undefined ? (
@@ -214,35 +226,36 @@ class Video extends Component {
           <div>
             <WebCamBoard>
               {this.state.publisher !== undefined ? (
-                <UserVideoComponent streamManager={this.state.publisher} />
+                <div className="m-3 rounded-[30px] w-[555px] h-[307px] flex items-center justify-center">
+                  <div class="relative">
+                    <UserVideoComponent streamManager={this.state.publisher} />
+                    <div class="absolute bottom-0 right-0">
+                      <MicBtn onClick={this.micStatusChanged} />
+                    </div>
+                    <div>
+                      <VideoBtn onClick={this.camStatusChanged} />
+                    </div>
+                  </div>
+                </div>
               ) : null}
-
-              {/* {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
-              {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
-              {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
-
-              {this.state.subscribers.length === 1 ? <FriendIsComing /> : null}
-              {this.state.subscribers.length === 1 ? <FriendIsComing /> : null} */}
 
               {this.state.subscribers.map((sub, i) =>
                 i < 3 ? <UserVideoComponent streamManager={sub} /> : null
               )}
 
-              {/* {1 <= this.state.subscribers.length < 2 ? (
-                <FriendIsComing />
-              ) : null}
-              {1 <= this.state.subscribers.length < 2 ? (
-                <FriendIsComing />
-              ) : null}
+              {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
+              {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
+              {this.state.subscribers.length === 0 ? <FriendIsComing /> : null}
 
-              {2 <= this.state.subscribers.length < 3 ? (
-                <FriendIsComing />
-              ) : null} */}
+              {this.state.subscribers.length === 1 ? <FriendIsComing /> : null}
+              {this.state.subscribers.length === 1 ? <FriendIsComing /> : null}
+
+              {this.state.subscribers.length === 2 ? <FriendIsComing /> : null}
             </WebCamBoard>
 
             <div className="flex justify-center">
               <ArBottomBarBase>
-                <div>
+                <div className="flex">
                   <input
                     className="bg-pink-400 text-3xl rounded-[30px]"
                     type="button"
@@ -281,9 +294,16 @@ class Video extends Component {
   async createSession(sessionId) {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: sessionId },
       {
-        headers: { "Content-Type": "application/json" },
+        customSessionId: sessionId,
+        // email: "ssafy@ssafy.com",
+        // gameType: "face",
+      },
+
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
     return response.data; // The sessionId
@@ -292,7 +312,15 @@ class Video extends Component {
   async createToken(sessionId) {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
+      {
+        // customIceServers: [
+        //   {
+        //     url: "https://3.35.166.44:4443/",
+        //     username: "OPENVIDUAPP",
+        //     credential: "MY_SECRET",
+        //   },
+        // ],
+      },
       {
         headers: { "Content-Type": "application/json" },
       }
