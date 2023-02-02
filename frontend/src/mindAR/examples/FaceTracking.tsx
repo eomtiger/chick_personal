@@ -4,6 +4,7 @@ import { Camera, Sphere, Entity, GLTFModel, Assets, Item } from 'aframe-react-co
 import FaceTracking from '../provider/FaceTracking';
 import { Faces, Scene } from '../components';
 import useARManager from '../utils/useARManager';
+import { spawn } from 'child_process';
 
 const ExampleFaceTracking = () => {
   const [enabled, setEnabled] = React.useState(false);
@@ -20,6 +21,30 @@ const ExampleFaceTracking = () => {
 
     setEnabled((curr) => !curr);
   };
+
+  // Start encoding the A-Frame scene using FFmpeg
+  const encodingProcess = child_process.spawn('ffmpeg', [
+    '-f',
+    'rawvideo',
+    '-pix_fmt',
+    'rgba',
+    '-s',
+    `500x$500`,
+    '-i',
+    '-',
+    '-f',
+    'flv',
+    '-an',
+    '-vcodec',
+    'vp9',
+    'rtmp://localhost/live/ar-stream',
+  ]);
+
+  console.log('encodingProcess', encodingProcess);
+
+  // const stream = sceneRef.current?.canvas.captureStream(30);
+
+  // console.log('stream', stream);
 
   return (
     <FaceTracking>
