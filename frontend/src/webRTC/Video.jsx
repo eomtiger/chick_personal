@@ -37,6 +37,7 @@ class Video extends Component {
       stream: undefined,
     };
     this.sceneRef = React.createRef(AScene);
+    this.viewRef = React.createRef();
 
     this.joinSession = this.joinSession.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
@@ -164,6 +165,9 @@ class Video extends Component {
 
               if (this.sceneRef.current) {
                 this.stream = this.sceneRef.current.canvas.captureStream();
+
+                if (!this.viewRef.current) return;
+                this.viewRef.current.srcObject = this.stream ? this.stream : null;
               }
               console.log('stream', this.stream);
 
@@ -271,6 +275,7 @@ class Video extends Component {
 
         {this.state.session !== undefined ? (
           <div>
+            <video ref={this.viewRef} autoPlay controls></video>
             <FaceTracking>
               <Scene
                 mindARFace={{
