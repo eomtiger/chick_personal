@@ -7,6 +7,7 @@ const options = {
   key: fs.readFileSync(path.resolve(dir, "privkey.pem")),
   cert: fs.readFileSync(path.resolve(dir, "cert.pem")),
 };
+
 const httpsServer = require("https").createServer(options, (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Origin", "https://i8b207.p.ssafy.io:3000");
