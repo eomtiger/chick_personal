@@ -1,7 +1,7 @@
 FROM    node:14.21.2
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+COPY    package*.json ./
+RUN     npm install
+ARG     FILE=src/index.js
+COPY    ${FILE} index.js
 CMD ["node", "index.js" ]
 EXPOSE 8081
