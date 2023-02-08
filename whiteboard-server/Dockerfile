@@ -1,4 +1,7 @@
 FROM    node:14.21.2
-ARG     FILE=src/index.js
-COPY    ${FILE} index.js
-ENTRYPOINT ["sudo", "node", "index.js"]
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD [ "sudo", "node", "index.js" ]
+EXPOSE 8081

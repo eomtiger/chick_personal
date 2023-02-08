@@ -6,17 +6,10 @@ pipeline {
     stages {
         stage('Pull') {
             steps {
-				script{
-				  git branch: 'nodejs', credentialsId: 'jaeuk', url: 'https://lab.ssafy.com/s08-webmobile1-sub2/S08P12B207'
-				}
-            }
-        }
-        stage('npm i') {
-          steps {
-            script {
-                sh 'npm install'
+              script{
+                git branch: 'nodejs', credentialsId: 'jaeuk', url: 'https://lab.ssafy.com/s08-webmobile1-sub2/S08P12B207'
               }
-          }
+            }
         }
    
         stage('Build') {
