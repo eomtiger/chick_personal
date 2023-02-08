@@ -22,8 +22,8 @@ pipeline {
            stage('Deploy') {
             steps {
               script {
-                sh 'docker stop nginx'
-                sh 'docker rm nginx'
+                sh 'docker stop nodejs'
+                sh 'docker rm nodejs'
                 sh 'docker run -d --name nodejs -p 8081:8081 -u root nodejs'
               }
             }
