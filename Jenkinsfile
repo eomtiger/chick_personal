@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
           steps {
             script {
-              sh 'docker build -t nodejs ./frontend/'
+              sh 'docker build -t nodejs ./whiteboard-server/'
             }
           }
         }
