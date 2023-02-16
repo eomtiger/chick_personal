@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -62,10 +63,13 @@ public class S3Service {
             byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
             metadata.setContentLength(bytes.length);
             metadata.setContentType(contentType);
+            ByteArrayInputStream byteArrayIs = new ByteArrayInputStream(bytes);
             String formDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("/yyyy-MM-dd HH:mm"));
             uploadFileName = dirName+formDate+fileName;
-            amazonS3.putObject(new PutObjectRequest(bucket, uploadFileName, multipartFile.getInputStream(), metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            PutObjectRequest putObjReq = new PutObjectRequest(bucket, uploadFileName, byteArrayIs, metadata);
+            amazonS3.putObject(putObjReq);
+//            amazonS3.putObject(new PutObjectRequest(bucket, uploadFileName, multipartFile.getInputStream(), metadata)
+//                    .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (AmazonServiceException e) {
             e.printStackTrace();
         } catch (SdkClientException e) {
