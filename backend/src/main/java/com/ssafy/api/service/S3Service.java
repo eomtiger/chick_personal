@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import com.ssafy.api.domain.entity.YoutubeKey;
 import com.ssafy.api.domain.repository.YoutubeRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +56,11 @@ public class S3Service {
                 contentType = "text/csv";
                 break;
         }
-
         try {
             ObjectMetadata metadata = new ObjectMetadata();
+
+            byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
+            metadata.setContentLength(bytes.length);
             metadata.setContentType(contentType);
             String formDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("/yyyy-MM-dd HH:mm"));
             uploadFileName = dirName+formDate+fileName;
