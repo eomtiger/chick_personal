@@ -58,7 +58,7 @@ OpenVidu, AR로 얼굴 바꾸기
 자동 매칭 알고리즘, 그림판 소켓 통신
 
 ## 🛠기술 스택
-![Architecture](/uploads/ded2e30cc1b0609813b2adcaeaf09345/Architecture.png)
+![Architecture](./images/chick_architecture.png)
 
 - 세부내역
 >구분|기술스택|상세내용|버전
@@ -99,15 +99,16 @@ OpenVidu, AR로 얼굴 바꾸기
 ### 📑기능 요구 명세서
 
 ### 📑ERD
-![ERD](/uploads/3afb539bde47f68677077f46033234c1/ERD.png)
+![ERD](./images/chick_erd.png)
 <br>
 
 ### 🧩와이어프레임
-![피그마](/uploads/18d6f520d99da3c38e92c09847917758/피그마.png)
+![figma](./images/chick_figma.png)
 
-피그마를 활용하여 작성함
+피그마를 활용하여 와이어프레임을 작성
 
-처음 와이어프레임 기획단계에서는 웹 화면으로 구상하였으나, 피드백을 받고 테블릿 화면으로 전환함
+아이들의 쉽게 조작할 수 있게 고려하여 UI/UX 디자인 하였음
+
 
 <br>
 
@@ -116,16 +117,16 @@ OpenVidu, AR로 얼굴 바꾸기
 ### 🛰프로젝트 디렉토리
 | 🖼프론트엔드                                                  | 📡백엔드                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![프론트디렉토리구조](/uploads/d0f94b2c4ac0fb303dd1f8d38696de6d/프론트디렉토리구조.png) | ![벡엔드디렉토리구조](/uploads/de09769496e8629179fb9cd5706126c5/벡엔드디렉토리구조.png) |
+| ![프론트디렉토리구조](./images/chick_frontend_dir.png) | ![벡엔드디렉토리구조](./images/chick_backend_dir.png) |
 <br>
 
 ### 📢Jira
-![지라](/uploads/41d405c9e4fb9bf302c76dd9b2722482/지라.png)
+![지라](./images/chick_jira.png)
 
 <br>
 
 ### 🧾Notion
-![노션](/uploads/37d6cd4d6ea352316af00de4ab61ac50/노션.png)
+![노션](./images/chick_notion.png)
 
 <br>
 
@@ -134,30 +135,30 @@ OpenVidu, AR로 얼굴 바꾸기
 ### 🕹주요 기능
 
 #### 변신놀이
-![변신놀이](/uploads/46dbc378201f2baabcbde3eadc923ff7/변신놀이.png)
+![변신놀이](./images/chick_service_face.png)
 <br>
 
 #### 그림놀이
-![그림놀이](/uploads/0dbb29d25163ecadfcb180a2ca94a02e/그림놀이.png)
+![그림놀이](./images/chick_service_draw.png)
 <br>
 
 #### 율동놀이
-![율동놀이](/uploads/da4bb61823af638e30a6cb11c24304a0/율동놀이.png)
+![율동놀이](./images/chick_service_dance.png)
 <br>
 
 #### 만화보기
-![만화](/uploads/d08ca4ccc03a21ba9104fa57c4a0af5a/만화.png)
+![만화](./images/chick_service_comic.png)
 <br>
 
 #### 마이페이지
-![마이페이지](/uploads/e1b61618d9db817b23af7f732b0dd0bb/마이페이지.png)
+![마이페이지](./images/chick_service_mypage.png)
 <br>
 
 ### 🧪데모 서비스 실행
 
 서버의 안정성과 버그를 찾기 위해 프로젝트 배포를 하고 Prometheus 와 Grafana를 통해 로그를 추적함
 
-![image](/uploads/47cafd88aa28dc687a2c85ca457e6a62/image.png)
+![데모](./images/chick_demo.png)
 
 - 배포 시작 3시간 경과 637번의 매칭 요청이 있었으며 403에러가 많이 발생하는 것을 확인
 - 같은 세션에 4명을 넘는 사람이 동시 접속이 되어 코드 수정 후 재배포 하였음
